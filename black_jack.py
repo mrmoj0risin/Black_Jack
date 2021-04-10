@@ -1,12 +1,12 @@
 from enum import Enum
-from random import randrange, shuffle,sample
+from random import sample
 
 
 def sum_cards(cards):
-    sum = 0
+    score = 0
     for card in cards:
-        sum = sum + card.value
-    return sum
+        score = score + card.value
+    return score
 
 
 class Cards:
@@ -143,10 +143,10 @@ class Croupier(Player):
         super().__init__(name="Croupier")
 
     def make_a_shoe(self):
-         # Почему то при создании нового крупье, перемешанная коложа такая же как и у первого
-        fulldeck = sample(DeckOfCards.full_deck, len(DeckOfCards.full_deck))
+        # Почему то при создании нового крупье, перемешанная коложа такая же как и у первого
+        shuffled_deck = sample(DeckOfCards.full_deck, len(DeckOfCards.full_deck))
 
-        for card in fulldeck:
+        for card in shuffled_deck:
             self.shoe.append(card)
 
         return self.shoe
@@ -154,26 +154,54 @@ class Croupier(Player):
 
 deck = DeckOfCards.full_deck
 
-player1 = Player('Goga')
+# player1 = Player('Goga')
+#
+# crup = Croupier()
+# shoe = crup.make_a_shoe()
 
-crup = Croupier()
-crup2 = Croupier()
-shoe = crup.make_a_shoe()
-shoe1 = crup2.make_a_shoe()
-
-print(deck)
-print('*'*195)
-print(shoe)
-print('*'*195)
-print(shoe1)
-print('*'*195)
-
-print(sum_cards(shoe))
-
-player1.take_card(shoe)
-player1.take_card(shoe)
+# print(deck)
+# print('*'*195)
+# print(shoe)
+# print('*'*195)
 
 
-print(player1.hand, player1.sum_score())
+# print(sum_cards(shoe))
+# print(sum_cards(DeckOfCards.full_deck))
+#
+# player1.take_card(shoe)
+# player1.take_card(shoe)
+# crup.take_card(shoe)
+#
+#
+# print(player1.hand, player1.sum_score())
+
+
+def game():
+    name = input("Enter ur name")
+    player = Player(name)
+
+    crup = Croupier()
+    shoe = crup.make_a_shoe()
+    game_loop = True
+
+    while game_loop:
+        a = input("PRESS A TO TAKE A CARD")
+        if a == 'a'.lower():
+            player.take_card(shoe)
+            crup.take_card(shoe)
+            print('Crup took a card')
+            print(f"ur cards  {player.hand}")
+            print(f'{crup.hand} is CRUP')
+            a2 = input("Wanna more? press a to take more or press any key if its enough")
+            if a2 == "a":
+                continue
+            else:
+                if player.sum_score() <= 21 and player.sum_score() > crup.sum_score():
+                    print("you WIN")
+                else:
+                    print('LOOSEER')
+
+
+game()
 
 
