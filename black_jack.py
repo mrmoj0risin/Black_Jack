@@ -210,4 +210,3 @@ deck = DeckOfCards.full_deck
 # player1.take_card(shoe)
 # player1.take_card(shoe)
 # crup.take_card(shoe)
-
