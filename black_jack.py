@@ -156,27 +156,6 @@ class Croupier(Player):
         return self.shoe
 
 
-deck = DeckOfCards.full_deck
-
-# player1 = Player('Goga')
-#
-# crup = Croupier()
-# shoe = crup.make_a_shoe()
-
-# print(deck)
-# print('*'*195)
-# print(shoe)
-# print('*'*195)
-
-
-# print(sum_cards(shoe))
-# print(sum_cards(DeckOfCards.full_deck))
-#
-# player1.take_card(shoe)
-# player1.take_card(shoe)
-# crup.take_card(shoe)
-
-
 def game():
     name = input("Enter ur name ")
     player = Player(name)
@@ -208,6 +187,27 @@ def game():
             print('LOST SCORE is > 21')
             break
 
+
 game()
 
+
+deck = DeckOfCards.full_deck
+
+# player1 = Player('Goga')
+#
+# crup = Croupier()
+# shoe = crup.make_a_shoe()
+
+# print(deck)
+# print('*'*195)
+# print(shoe)
+# print('*'*195)
+
+
+# print(sum_cards(shoe))
+# print(sum_cards(DeckOfCards.full_deck))
+#
+# player1.take_card(shoe)
+# player1.take_card(shoe)
+# crup.take_card(shoe)
 
