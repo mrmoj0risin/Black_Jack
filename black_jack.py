@@ -177,7 +177,7 @@ def game():
                 if a2 == "a":
                     continue
                 else:
-                    if player.sum_score() <= 21 and player.sum_score() > crup.sum_score():
+                    if 21 >= player.sum_score() > crup.sum_score():
                         print(f"you WIN Ur score is {player.sum_score()} , crup {crup.sum_score}")
                         break
                     else:
