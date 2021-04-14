@@ -19,13 +19,10 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Basic Pygame Template')
 
 
-
-
-
 def main():
     scale = 0.42
-    hand1 = pygame.transform.rotozoom(DeckOfCards.six_d.img, -47, scale)
-    hand2 = pygame.transform.rotozoom(DeckOfCards.six_d.img, -30, scale)
+    hand1_angle = -47
+    hand2_angle = -30
 
     hand1_x_y = (30, 310)
     hand2_x_y = (140, 388)
@@ -34,7 +31,7 @@ def main():
     screen.fill(BLUE)
     screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
 
-    screen.blit(pygame.transform.rotozoom(hand1), hand1_x_y)
+    screen.blit(pygame.transform.rotozoom(DeckOfCards.six_d.img, hand2_angle, scale), hand2_x_y)
 
     while True:
         for event in pygame.event.get():
