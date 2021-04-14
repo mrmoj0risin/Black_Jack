@@ -1,5 +1,49 @@
 from enum import Enum
 from random import sample
+import pygame
+from pygame.sprite import RenderUpdates
+from pygame.locals import *
+import sys
+import os
+from UIElement import UIElement
+
+pygame.init()
+fps = 30
+fpsClock = pygame.time.Clock()
+
+BLUE = (106, 159, 181)
+width, height = 900, 800
+BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
+
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption('Basic Pygame Template')
+
+
+
+
+
+def main():
+    scale = 0.42
+    hand1 = pygame.transform.rotozoom(DeckOfCards.six_d.img, -47, scale)
+    hand2 = pygame.transform.rotozoom(DeckOfCards.six_d.img, -30, scale)
+
+    hand1_x_y = (30, 310)
+    hand2_x_y = (140, 388)
+
+
+    screen.fill(BLUE)
+    screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
+
+    screen.blit(pygame.transform.rotozoom(hand1), hand1_x_y)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        fpsClock.tick(fps)
 
 
 def sum_cards(cards):
@@ -9,13 +53,20 @@ def sum_cards(cards):
     return score
 
 
+def transform_card(cards_img):
+    return pygame.transform.scale(cards_img,
+                                  (int(cards_img.get_size()[0]),
+                                   int(cards_img.get_size()[1])))
+
+
 class Cards:
 
-    def __init__(self, value, sign, name, decription):
+    def __init__(self, value, sign, name, description, img):
         self.value = value
         self.sign = sign
         self.name = name
-        self.description = decription
+        self.description = description
+        self.img = img
 
     def __repr__(self):
         return str(self.description)
@@ -53,62 +104,66 @@ class CardName(Enum):
 class DeckOfCards:
     def __init__(self):
         pass
+    
+    cards_imgs = [pygame.image.load(os.path.join("imgs/cards", "Ten of Diamonds.png")),
 
-    two_h = Cards(2, Sign.HEARTS, CardName.Two, "Two of Hearts")
-    tree_h = Cards(3, Sign.HEARTS, CardName.Tree, "Tree of Hearts")
-    four_h = Cards(4, Sign.HEARTS, CardName.Four, "Four of Hearts")
-    five_h = Cards(5, Sign.HEARTS, CardName.Five, "Five of Hearts")
-    six_h = Cards(6, Sign.HEARTS, CardName.Six, "Six of Hearts")
-    seven_h = Cards(7, Sign.HEARTS, CardName.Seven, "Seven of Hearts")
-    eight_h = Cards(8, Sign.HEARTS, CardName.Eight, "Eight of Hearts")
-    nine_h = Cards(9, Sign.HEARTS, CardName.Nine, "Nine of Hearts")
-    ten_h = Cards(10, Sign.HEARTS, CardName.Ten, "Ten of Hearts")
-    jack_h = Cards(10, Sign.HEARTS, CardName.Jack, "Jack of Hearts")
-    queen_h = Cards(10, Sign.HEARTS, CardName.Queen, "Queen of Hearts")
-    king_h = Cards(10, Sign.HEARTS, CardName.King, "King of Hearts")
-    ace_h = Cards(11, Sign.HEARTS, CardName.Ace, "Ace of Hearts")
+                  ]
 
-    two_c = Cards(2, Sign.CLUBS, CardName.Two,  "Two of Clubs")
-    tree_c = Cards(3, Sign.CLUBS, CardName.Tree, "Tree of Clubs")
-    four_c = Cards(4, Sign.CLUBS, CardName.Four, "Four of Clubs")
-    five_c = Cards(5, Sign.CLUBS, CardName.Five, "Five of Clubs")
-    six_c = Cards(6, Sign.CLUBS, CardName.Six, "Six of Clubs")
-    seven_c = Cards(7, Sign.CLUBS, CardName.Seven, "Seven of Clubs")
-    eight_c = Cards(8, Sign.CLUBS, CardName.Eight, "Eight of Clubs")
-    nine_c = Cards(9, Sign.CLUBS, CardName.Nine, "Nine of Clubs")
-    ten_c = Cards(10, Sign.CLUBS, CardName.Ten, "Ten of Clubs")
-    jack_c = Cards(10, Sign.CLUBS, CardName.Jack, "Jack of Clubs")
-    queen_c = Cards(10, Sign.CLUBS, CardName.Queen, "Queen of Clubs")
-    king_c = Cards(10, Sign.CLUBS, CardName.King, "King of Clubs")
-    ace_c = Cards(11, Sign.CLUBS, CardName.Ace, "Ace of Clubs")
+    two_h = Cards(2, Sign.HEARTS, CardName.Two, "Two of Hearts", transform_card(cards_imgs[0]))
+    tree_h = Cards(3, Sign.HEARTS, CardName.Tree, "Tree of Hearts", transform_card(cards_imgs[0]))
+    four_h = Cards(4, Sign.HEARTS, CardName.Four, "Four of Hearts", transform_card(cards_imgs[0]))
+    five_h = Cards(5, Sign.HEARTS, CardName.Five, "Five of Hearts", transform_card(cards_imgs[0]))
+    six_h = Cards(6, Sign.HEARTS, CardName.Six, "Six of Hearts", transform_card(cards_imgs[0]))
+    seven_h = Cards(7, Sign.HEARTS, CardName.Seven, "Seven of Hearts", transform_card(cards_imgs[0]))
+    eight_h = Cards(8, Sign.HEARTS, CardName.Eight, "Eight of Hearts", transform_card(cards_imgs[0]))
+    nine_h = Cards(9, Sign.HEARTS, CardName.Nine, "Nine of Hearts", transform_card(cards_imgs[0]))
+    ten_h = Cards(10, Sign.HEARTS, CardName.Ten, "Ten of Hearts", transform_card(cards_imgs[0]))
+    jack_h = Cards(10, Sign.HEARTS, CardName.Jack, "Jack of Hearts", transform_card(cards_imgs[0]))
+    queen_h = Cards(10, Sign.HEARTS, CardName.Queen, "Queen of Hearts", transform_card(cards_imgs[0]))
+    king_h = Cards(10, Sign.HEARTS, CardName.King, "King of Hearts", transform_card(cards_imgs[0]))
+    ace_h = Cards(11, Sign.HEARTS, CardName.Ace, "Ace of Hearts", transform_card(cards_imgs[0]))
 
-    two_s = Cards(2, Sign.SPADES, CardName.Two,  "Two of Spades")
-    tree_s = Cards(3, Sign.SPADES, CardName.Tree, "Tree of Spades")
-    four_s = Cards(4, Sign.SPADES, CardName.Four, "Four of Spades")
-    five_s = Cards(5, Sign.SPADES, CardName.Five, "Five of Spades")
-    six_s = Cards(6, Sign.SPADES, CardName.Six, "Six of Spades")
-    seven_s = Cards(7, Sign.SPADES, CardName.Seven, "Seven of Spades")
-    eight_s = Cards(8, Sign.SPADES, CardName.Eight, "Eight of Spades")
-    nine_s = Cards(9, Sign.SPADES, CardName.Nine, "Nine of Spades")
-    ten_s = Cards(10, Sign.SPADES, CardName.Ten, "Ten of Spades")
-    jack_s = Cards(10, Sign.SPADES, CardName.Jack, "Jack of Spades")
-    queen_s = Cards(10, Sign.SPADES, CardName.Queen, "Queen of Spades")
-    king_s = Cards(10, Sign.SPADES, CardName.King, "King of Spades")
-    ace_s = Cards(11, Sign.SPADES, CardName.Ace, "Ace of Spades")
+    two_c = Cards(2, Sign.CLUBS, CardName.Two,  "Two of Clubs", transform_card(cards_imgs[0]))
+    tree_c = Cards(3, Sign.CLUBS, CardName.Tree, "Tree of Clubs", transform_card(cards_imgs[0]))
+    four_c = Cards(4, Sign.CLUBS, CardName.Four, "Four of Clubs", transform_card(cards_imgs[0]))
+    five_c = Cards(5, Sign.CLUBS, CardName.Five, "Five of Clubs", transform_card(cards_imgs[0]))
+    six_c = Cards(6, Sign.CLUBS, CardName.Six, "Six of Clubs", transform_card(cards_imgs[0]))
+    seven_c = Cards(7, Sign.CLUBS, CardName.Seven, "Seven of Clubs", transform_card(cards_imgs[0]))
+    eight_c = Cards(8, Sign.CLUBS, CardName.Eight, "Eight of Clubs", transform_card(cards_imgs[0]))
+    nine_c = Cards(9, Sign.CLUBS, CardName.Nine, "Nine of Clubs", transform_card(cards_imgs[0]))
+    ten_c = Cards(10, Sign.CLUBS, CardName.Ten, "Ten of Clubs", transform_card(cards_imgs[0]))
+    jack_c = Cards(10, Sign.CLUBS, CardName.Jack, "Jack of Clubs", transform_card(cards_imgs[0]))
+    queen_c = Cards(10, Sign.CLUBS, CardName.Queen, "Queen of Clubs", transform_card(cards_imgs[0]))
+    king_c = Cards(10, Sign.CLUBS, CardName.King, "King of Clubs", transform_card(cards_imgs[0]))
+    ace_c = Cards(11, Sign.CLUBS, CardName.Ace, "Ace of Clubs", transform_card(cards_imgs[0]))
 
-    two_d = Cards(2, Sign.DIAMONDS, CardName.Two,  "Two of Diamonds")
-    tree_d = Cards(3, Sign.DIAMONDS, CardName.Tree, "Tree of Diamonds")
-    four_d = Cards(4, Sign.DIAMONDS, CardName.Four, "Four of Diamonds")
-    five_d = Cards(5, Sign.DIAMONDS, CardName.Five, "Five of Diamonds")
-    six_d = Cards(6, Sign.DIAMONDS, CardName.Six, "Six of Diamonds")
-    seven_d = Cards(7, Sign.DIAMONDS, CardName.Seven, "Seven of Diamonds")
-    eight_d = Cards(8, Sign.DIAMONDS, CardName.Eight, "Eight of Diamonds")
-    nine_d = Cards(9, Sign.DIAMONDS, CardName.Nine, "Nine of Diamonds")
-    ten_d = Cards(10, Sign.DIAMONDS, CardName.Ten, "Ten of Diamonds")
-    jack_d = Cards(10, Sign.DIAMONDS, CardName.Jack, "Jack of Diamonds")
-    queen_d = Cards(10, Sign.DIAMONDS, CardName.Queen, "Queen of Diamonds")
-    king_d = Cards(10, Sign.DIAMONDS, CardName.King, "King of Diamonds")
-    ace_d = Cards(11, Sign.DIAMONDS, CardName.Ace, "Ace of Diamonds")
+    two_s = Cards(2, Sign.SPADES, CardName.Two,  "Two of Spades", transform_card(cards_imgs[0]))
+    tree_s = Cards(3, Sign.SPADES, CardName.Tree, "Tree of Spades", transform_card(cards_imgs[0]))
+    four_s = Cards(4, Sign.SPADES, CardName.Four, "Four of Spades", transform_card(cards_imgs[0]))
+    five_s = Cards(5, Sign.SPADES, CardName.Five, "Five of Spades", transform_card(cards_imgs[0]))
+    six_s = Cards(6, Sign.SPADES, CardName.Six, "Six of Spades", transform_card(cards_imgs[0]))
+    seven_s = Cards(7, Sign.SPADES, CardName.Seven, "Seven of Spades", transform_card(cards_imgs[0]))
+    eight_s = Cards(8, Sign.SPADES, CardName.Eight, "Eight of Spades", transform_card(cards_imgs[0]))
+    nine_s = Cards(9, Sign.SPADES, CardName.Nine, "Nine of Spades", transform_card(cards_imgs[0]))
+    ten_s = Cards(10, Sign.SPADES, CardName.Ten, "Ten of Spades", transform_card(cards_imgs[0]))
+    jack_s = Cards(10, Sign.SPADES, CardName.Jack, "Jack of Spades", transform_card(cards_imgs[0]))
+    queen_s = Cards(10, Sign.SPADES, CardName.Queen, "Queen of Spades", transform_card(cards_imgs[0]))
+    king_s = Cards(10, Sign.SPADES, CardName.King, "King of Spades", transform_card(cards_imgs[0]))
+    ace_s = Cards(11, Sign.SPADES, CardName.Ace, "Ace of Spades", transform_card(cards_imgs[0]))
+
+    two_d = Cards(2, Sign.DIAMONDS, CardName.Two,  "Two of Diamonds", transform_card(cards_imgs[0]))
+    tree_d = Cards(3, Sign.DIAMONDS, CardName.Tree, "Tree of Diamonds", transform_card(cards_imgs[0]))
+    four_d = Cards(4, Sign.DIAMONDS, CardName.Four, "Four of Diamonds", transform_card(cards_imgs[0]))
+    five_d = Cards(5, Sign.DIAMONDS, CardName.Five, "Five of Diamonds", transform_card(cards_imgs[0]))
+    six_d = Cards(6, Sign.DIAMONDS, CardName.Six, "Six of Diamonds", transform_card(cards_imgs[0]))
+    seven_d = Cards(7, Sign.DIAMONDS, CardName.Seven, "Seven of Diamonds", transform_card(cards_imgs[0]))
+    eight_d = Cards(8, Sign.DIAMONDS, CardName.Eight, "Eight of Diamonds", transform_card(cards_imgs[0]))
+    nine_d = Cards(9, Sign.DIAMONDS, CardName.Nine, "Nine of Diamonds", transform_card(cards_imgs[0]))
+    ten_d = Cards(10, Sign.DIAMONDS, CardName.Ten, "Ten of Diamonds", transform_card(cards_imgs[0]))
+    jack_d = Cards(10, Sign.DIAMONDS, CardName.Jack, "Jack of Diamonds", transform_card(cards_imgs[0]))
+    queen_d = Cards(10, Sign.DIAMONDS, CardName.Queen, "Queen of Diamonds", transform_card(cards_imgs[0]))
+    king_d = Cards(10, Sign.DIAMONDS, CardName.King, "King of Diamonds", transform_card(cards_imgs[0]))
+    ace_d = Cards(11, Sign.DIAMONDS, CardName.Ace, "Ace of Diamonds", transform_card(cards_imgs[0]))
 
     full_deck = [two_h, tree_h, four_h, five_h, six_h, seven_h, eight_h, nine_h, ten_h, jack_h, queen_h, king_h, ace_h,
                  two_c, tree_c, four_c, five_c, six_c, seven_c, eight_c, nine_c, ten_c, jack_c, queen_c, king_c, ace_c,
@@ -157,8 +212,8 @@ class Croupier(Player):
 
 
 def game():
-    name = input("Enter ur name ")
-    player = Player(name)
+    # name = input("Enter ur name ")
+    player = Player("name")
 
     crup = Croupier()
     shoe = crup.make_a_shoe()
@@ -188,25 +243,5 @@ def game():
             break
 
 
-game()
-
-
-deck = DeckOfCards.full_deck
-
-# player1 = Player('Goga')
-#
-# crup = Croupier()
-# shoe = crup.make_a_shoe()
-
-# print(deck)
-# print('*'*195)
-# print(shoe)
-# print('*'*195)
-
-
-# print(sum_cards(shoe))
-# print(sum_cards(DeckOfCards.full_deck))
-#
-# player1.take_card(shoe)
-# player1.take_card(shoe)
-# crup.take_card(shoe)
+if __name__ == "__main__":
+    main()
