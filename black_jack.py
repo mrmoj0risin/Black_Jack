@@ -11,13 +11,12 @@ pygame.init()
 fps = 30
 fpsClock = pygame.time.Clock()
 
+BG_RGB = (224, 150, 116)
 WHITE = (255, 255, 255)
 BLUE = (106, 159, 181)
 width, height = 900, 800
 BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
 
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('Basic Pygame Template')
 
 scale = 0.42
 hand1 = Hand(-43, (24, 312))
@@ -27,6 +26,44 @@ hand4 = Hand(0, (400, 468))
 hand5 = Hand(16, (520, 440))
 hand6 = Hand(31, (630, 380))
 hand7 = Hand(43, (720, 305))
+
+
+def main():
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption('Black Jack v 0.1')
+
+    game_state = GameState.GAME
+
+    hand1.draw(DeckOfCards.five_c, screen)
+    hand2.draw(DeckOfCards.ten_d, screen)
+    hand3.draw(DeckOfCards.six_d, screen)
+    hand4.draw(DeckOfCards.six_d, screen)
+    hand5.draw(DeckOfCards.ace_c, screen)
+    hand5.draw(DeckOfCards.jack_c, screen)
+    hand6.draw(DeckOfCards.six_d, screen)
+    hand7.draw(DeckOfCards.six_d, screen)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        if game_state == GameState.TITLE:
+            game_state = title_screen(screen, game_state)
+
+        if game_state == GameState.GAME:
+            game_state = play_level(screen, game_state)
+        #
+        # if game_state == GameState.LOST:
+        #     game_state = game_over_screen(screen, game_state, score)
+
+        if game_state == GameState.QUIT:
+            pygame.quit()
+            return
+
+        pygame.display.update()
+        fpsClock.tick(fps)
+
 
 def title_screen(screen, game_state):
     start_btn = UIElement(
@@ -79,41 +116,50 @@ def screens_loop(screen, buttons, game_state):
         buttons.draw(screen)
         pygame.display.flip()
 
-def main():
-    game_state = GameState.TITLE
+
+def play_level(screen, game_state):
+    return_btn = UIElement(
+        center_position=(width - 80, screen.get_height()-30),
+        font_size=17,
+        bg_rgb=BG_RGB,
+        text_rgb=WHITE,
+        text="To main menu",
+        action=GameState.TITLE,
+    )
+
+    buttons = RenderUpdates(return_btn)
+
+    return game_loop(screen, buttons, game_state)
 
 
-    # screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
-
-    hand1.draw(DeckOfCards.five_c, screen)
-    hand2.draw(DeckOfCards.ten_d, screen)
-    hand3.draw(DeckOfCards.six_d, screen)
-    hand4.draw(DeckOfCards.six_d, screen)
-    hand5.draw(DeckOfCards.ace_c, screen)
-    hand5.draw(DeckOfCards.jack_c, screen)
-    hand6.draw(DeckOfCards.six_d, screen)
-    hand7.draw(DeckOfCards.six_d, screen)
+def game_loop(screen, buttons, game_state):
     while True:
+        clock = pygame.time.Clock()
+        clock.tick(30)
+        mouse_up = False
+
+        # Catching events
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                pass
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_up = True
 
-        if game_state == GameState.TITLE:
-            game_state = title_screen(screen, game_state)
+        if game_state == GameState.GAME:
 
-        # if game_state == GameState.GAME:
-        #     game_state = play_level(screen, game_state, score)
-        #
-        # if game_state == GameState.LOST:
-        #     game_state = game_over_screen(screen, game_state, score)
+            screen.fill(BG_RGB)
+            screen.blit(BG_IMG, (0, screen.get_height() / 2 - BG_IMG.get_height() / 2))
 
-        if game_state == GameState.QUIT:
-            pygame.quit()
-            return
+        for button in buttons:
+            ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
+            if ui_action is not None:
+                return ui_action
 
+        buttons.draw(screen)
+        pygame.display.flip()
         pygame.display.update()
-        fpsClock.tick(fps)
 
 
 def sum_cards(cards):
