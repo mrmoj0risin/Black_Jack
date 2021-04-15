@@ -1,12 +1,11 @@
-from enum import Enum
 from random import sample
 import pygame
-from pygame.sprite import RenderUpdates
-from pygame.locals import *
+# from pygame.sprite import RenderUpdates
+# from pygame.locals import *
 import sys
 import os
-from UIElement import UIElement
-from cards import DeckOfCards
+# from UIElement import UIElement
+from cards import DeckOfCards, Hand
 
 pygame.init()
 fps = 30
@@ -19,21 +18,29 @@ BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Basic Pygame Template')
 
+scale = 0.42
+hand1 = Hand(-43, (24, 312))
+hand2 = Hand(-31, (130, 390))
+hand3 = Hand(-16, (255, 442))
+hand4 = Hand(0, (400, 468))
+hand5 = Hand(16, (520, 440))
+hand6 = Hand(31, (630, 380))
+hand7 = Hand(43, (720, 305))
+
 
 def main():
-    scale = 0.42
-    hand1_angle = -47
-    hand2_angle = -30
-
-    hand1_x_y = (30, 310)
-    hand2_x_y = (140, 388)
-
 
     screen.fill(BLUE)
     screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
 
-    screen.blit(pygame.transform.rotozoom(DeckOfCards.six_d.img, hand2_angle, scale), hand2_x_y)
-
+    hand1.draw(DeckOfCards.five_c, screen)
+    hand2.draw(DeckOfCards.ten_d, screen)
+    hand3.draw(DeckOfCards.six_d, screen)
+    hand4.draw(DeckOfCards.six_d, screen)
+    hand5.draw(DeckOfCards.ace_c, screen)
+    hand5.draw(DeckOfCards.jack_c, screen)
+    hand6.draw(DeckOfCards.six_d, screen)
+    hand7.draw(DeckOfCards.six_d, screen)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -89,6 +96,9 @@ class Croupier(Player):
             self.shoe.append(card)
 
         return self.shoe
+
+
+
 
 
 def game():
