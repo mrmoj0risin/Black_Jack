@@ -182,4 +182,5 @@ class Hand:
         self.coordinates = coordinates
 
     def draw(self, card, screen):
+
         return screen.blit(pygame.transform.rotozoom(card.img, self.angle, 0.26), self.coordinates)

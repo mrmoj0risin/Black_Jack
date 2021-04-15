@@ -3,6 +3,7 @@ from cards import DeckOfCards
 
 
 class Player:
+    count = -1
 
     def __init__(self, name, hand=None, score=0):
         self.name = name
@@ -23,6 +24,9 @@ class Player:
 
     def take_card(self, shoe):
         self.hand.append(shoe.pop(0))
+        self.count += 1
+        return self.count
+
 
 
 class Croupier(Player):
