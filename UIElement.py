@@ -1,6 +1,6 @@
 from pygame.sprite import Sprite
 from pygame.freetype import SysFont
-
+from enum import Enum
 
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     """ Returns surface with text written on """
@@ -65,3 +65,11 @@ class UIElement(Sprite):
     def draw(self, surface):
         """ Draws element onto a surface """
         surface.blit(self.image, self.rect)
+
+
+class GameState(Enum):
+    QUIT = -1
+    TITLE = 0
+    GAME = 1
+    NEXT_LEVEL = 2
+    LOST = 3

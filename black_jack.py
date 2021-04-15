@@ -1,9 +1,9 @@
 import pygame
-# from pygame.sprite import RenderUpdates
+from pygame.sprite import RenderUpdates
 # from pygame.locals import *
 import sys
 import os
-# from UIElement import UIElement
+from UIElement import UIElement, GameState
 from cards import DeckOfCards, Hand
 from players import Player, Croupier
 
@@ -11,6 +11,7 @@ pygame.init()
 fps = 30
 fpsClock = pygame.time.Clock()
 
+WHITE = (255, 255, 255)
 BLUE = (106, 159, 181)
 width, height = 900, 800
 BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
@@ -27,11 +28,62 @@ hand5 = Hand(16, (520, 440))
 hand6 = Hand(31, (630, 380))
 hand7 = Hand(43, (720, 305))
 
+def title_screen(screen, game_state):
+    start_btn = UIElement(
+        center_position=(width / 2, 400),
+        font_size=30,
+        bg_rgb=BLUE,
+        text_rgb=WHITE,
+        text="Start",
+        action=GameState.GAME,
+    )
+    quit_btn = UIElement(
+        center_position=(width / 2, 480),
+        font_size=30,
+        bg_rgb=BLUE,
+        text_rgb=WHITE,
+        text="Quit",
+        action=GameState.QUIT,
+    )
+
+    buttons = RenderUpdates(start_btn, quit_btn)
+
+    return screens_loop(screen, buttons, game_state)
+
+
+def screens_loop(screen, buttons, game_state):
+    """ Handles game loop until an action is return by a button in the
+        buttons sprite renderer.
+    """
+    while True:
+        mouse_up = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_up = True
+        screen.blit(BG_IMG, (0, 0))
+
+        if game_state == GameState.TITLE:
+            screen.fill(BLUE)
+
+        if game_state == GameState.LOST:
+
+            screen.blit(BG_IMG, (0, 0))
+
+        for button in buttons:
+            ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
+            if ui_action is not None:
+                return ui_action
+
+        buttons.draw(screen)
+        pygame.display.flip()
 
 def main():
+    game_state = GameState.TITLE
 
-    screen.fill(BLUE)
-    screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
+
+    # screen.blit(BG_IMG, (0, screen.get_height()/2 - BG_IMG.get_height()/2))
 
     hand1.draw(DeckOfCards.five_c, screen)
     hand2.draw(DeckOfCards.ten_d, screen)
@@ -46,6 +98,19 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+        if game_state == GameState.TITLE:
+            game_state = title_screen(screen, game_state)
+
+        # if game_state == GameState.GAME:
+        #     game_state = play_level(screen, game_state, score)
+        #
+        # if game_state == GameState.LOST:
+        #     game_state = game_over_screen(screen, game_state, score)
+
+        if game_state == GameState.QUIT:
+            pygame.quit()
+            return
 
         pygame.display.update()
         fpsClock.tick(fps)
