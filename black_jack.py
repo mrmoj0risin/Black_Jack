@@ -12,12 +12,11 @@ fps = 30
 fpsClock = pygame.time.Clock()
 
 BG_RGB = (224, 150, 116)
-BG_RGB2 = (230, 156, 122)
+BG_RGB2 = (230, 150, 122)
 WHITE = (255, 255, 255)
 BLUE = (106, 159, 181)
 width, height = 900, 800
 BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
-
 
 scale = 0.42
 
@@ -29,11 +28,22 @@ hand5 = Hand(16, (520, 440))
 hand6 = Hand(31, (630, 380))
 hand7 = Hand(43, (720, 305))
 
-hands = [hand1, hand2, hand3, hand4, hand5, hand6, hand7]
-x = []
+player_hand_coordinates = [hand1, hand2, hand3, hand4, hand5, hand6, hand7]
+player_hand_draw = []
 
 angles = [-43, -31, -16, 0, 16, 31, 43]
 coordinates = [(24, 312), (130, 390), (255, 442), (400, 468), (520, 440), (630, 380), (720, 305)]
+
+
+crup_hand1 = Hand(-13, (250, 100))
+crup_hand2 = Hand(-8, (290, 115))
+crup_hand3 = Hand(-3, (340, 125))
+crup_hand4 = Hand(0, (390, 125))
+crup_hand5 = Hand(3, (420, 124))
+crup_hand6 = Hand(8, (450, 114))
+crup_hand7 = Hand(13, (490, 100))
+
+crup_hand_draw = []
 
 
 def main():
@@ -43,6 +53,8 @@ def main():
     game_state = GameState.GAME
 
     player = Player("name")
+    crup = Croupier()
+    shoe = crup.make_a_shoe()
 
     while True:
 
@@ -55,7 +67,7 @@ def main():
             game_state = title_screen(screen, game_state)
 
         if game_state == GameState.GAME:
-            game_state = play_level(screen, game_state, player)
+            game_state = play_level(screen, game_state, player, shoe, crup)
         #
         # if game_state == GameState.LOST:
         #     game_state = game_over_screen(screen, game_state, score)
@@ -116,7 +128,7 @@ def screens_loop(screen, buttons, game_state):
         pygame.display.flip()
 
 
-def play_level(screen, game_state, player):
+def play_level(screen, game_state, player, shoe, crup):
 
     return_btn = UIElement(
         center_position=(width - 80, screen.get_height()-30),
@@ -128,7 +140,7 @@ def play_level(screen, game_state, player):
     )
     take_card = UIElement(
 
-        center_position=(width/2, height-100),
+        center_position=(width/2-200, height-100),
         font_size=25,
         bg_rgb=BG_RGB,
         text_rgb=WHITE,
@@ -139,25 +151,31 @@ def play_level(screen, game_state, player):
 
     buttons = RenderUpdates(return_btn, take_card)
 
-    return game_loop(screen, buttons, game_state, player)
+    return game_loop(screen, buttons, game_state, player, shoe, crup)
 
 
-def game_loop(screen, buttons, game_state, player):
+def game_loop(screen, buttons, game_state, player, shoe, crup):
     while True:
         clock = pygame.time.Clock()
         clock.tick(30)
         mouse_up = False
 
-        crup = Croupier()
-        shoe = crup.make_a_shoe()
-
         btn = Button(
             color=BG_RGB2,
-            x=screen.get_width()/2-90,
+            x=width/2-300,
             y=screen.get_height() - 130,
             width=200,
             height=60,
             text=""
+        )
+
+        btn2 = Button(
+            color=BG_RGB2,
+            x=width/2+96,
+            y=screen.get_height() - 130,
+            width=200,
+            height=60,
+            text="Stop"
         )
 
         # Catching events
@@ -172,31 +190,28 @@ def game_loop(screen, buttons, game_state, player):
                 pos = pygame.mouse.get_pos()
                 if btn.isOver(pos):
                     player.take_card(shoe)
-                    print(player.count)
+                    crup.take_card(shoe)
+                    print(crup.hand)
+                if btn2.isOver(pos):
+                    if player.sum_score() > crup.sum_score():
+                        print("WIN")
+                    else:
+                        print("LOSER")
                 mouse_up = True
         if game_state == GameState.GAME:
 
             screen.fill(BG_RGB)
             screen.blit(BG_IMG, (0, screen.get_height() / 2 - BG_IMG.get_height() / 2))
-            btn.draw(screen)
+            btn.draw(screen, True)
+            btn2.draw(screen, True)
 
             if 7 > player.count >= 0:
-                i = player.count
-                s = pygame.transform.rotozoom(player.hand[player.count].img, angles[i], 0.26), coordinates[i]
-                # print(s)
-                x.append(s)
+                player_card = pygame.transform.rotozoom(player.hand[player.count].img, angles[player.count], 0.26),\
+                                                                                               coordinates[player.count]
+                crup_card = pygame.transform.rotozoom(crup.hand[crup.count].img, angles[crup.count], 0.26), \
+                                                                                               coordinates[crup.count]
 
-
-
-
-
-            # hand2.draw(DeckOfCards.ten_d, screen)
-            # hand3.draw(DeckOfCards.six_d, screen)
-            # hand4.draw(DeckOfCards.six_d, screen)
-            # hand5.draw(DeckOfCards.ace_c, screen)
-            # hand5.draw(DeckOfCards.jack_c, screen)
-            # hand6.draw(DeckOfCards.six_d, screen)
-            # hand7.draw(DeckOfCards.six_d, screen)
+                player_hand_draw.append(player_card)
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
@@ -204,8 +219,17 @@ def game_loop(screen, buttons, game_state, player):
                 return ui_action
 
         buttons.draw(screen)
-        for i in x:
-            screen.blit(i[0], i[1])
+        # crup_hand1.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand2.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand3.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand4.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand5.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand6.draw_hidden(DeckOfCards.six_d, screen)
+        # crup_hand7.draw_hidden(DeckOfCards.six_d, screen)
+
+        # draw cards
+        for card in player_hand_draw:
+            screen.blit(card[0], card[1])
         pygame.display.flip()
         pygame.display.update()
 

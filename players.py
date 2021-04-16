@@ -28,7 +28,6 @@ class Player:
         return self.count
 
 
-
 class Croupier(Player):
 
     shoe = []
