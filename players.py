@@ -27,6 +27,10 @@ class Player:
         self.count += 1
         return self.count
 
+    def clear(self):
+        self.count = -1
+        self.hand.clear()
+
 
 class Croupier(Player):
 
