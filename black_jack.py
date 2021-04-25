@@ -1,10 +1,8 @@
 import pygame
 from pygame.sprite import RenderUpdates
-# from pygame.locals import *
 import sys
 import os
 from UIElement import UIElement, GameState, Button
-# from cards import Hand
 from players import Player, Croupier
 
 pygame.init()
@@ -21,28 +19,10 @@ BG_IMG = pygame.image.load(os.path.join("imgs", "sukno.png"))
 
 scale = 0.42
 
-# hand1 = Hand(-43, (24, 312))
-# hand2 = Hand(-31, (130, 390))
-# hand3 = Hand(-16, (255, 442))
-# hand4 = Hand(0, (400, 468))
-# hand5 = Hand(16, (520, 440))
-# hand6 = Hand(31, (630, 380))
-# hand7 = Hand(43, (720, 305))
-
-# player_hand_coordinates = [hand1, hand2, hand3, hand4, hand5, hand6, hand7]
 player_hand_draw = []
 
 angles = [-43, -31, -16, 0, 16, 31, 43]
 coordinates = [(24, 312), (130, 390), (255, 442), (400, 468), (520, 440), (630, 380), (720, 305)]
-
-
-# crup_hand1 = Hand(-13, (250, 100))
-# crup_hand2 = Hand(-8, (290, 115))
-# crup_hand3 = Hand(-3, (340, 125))
-# crup_hand4 = Hand(0, (390, 125))
-# crup_hand5 = Hand(3, (420, 124))
-# crup_hand6 = Hand(8, (450, 114))
-# crup_hand7 = Hand(13, (490, 100))
 
 crup_angles = [-13, -8, -3, 0, 3, 8, 13]
 crup_coordinates = [(245, 100), (290, 115), (340, 125), (390, 125), (420, 124), (450, 110), (490, 95)]
@@ -74,9 +54,6 @@ def main():
 
         if game_state == GameState.GAME:
             game_state = play_level(screen, game_state, player, shoe, crup)
-        #
-        # if game_state == GameState.LOST:
-        #     game_state = game_over_screen(screen, game_state, score)
 
         if game_state == GameState.QUIT:
             pygame.quit()
@@ -228,8 +205,6 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
                     btn_stop.pressed = True
                     game_stop = False
 
-                    # if btn_stop.pressed:
-
                     crup_hand_draw.clear()
 
                     if 21 >= player.score > crup.score:
@@ -288,38 +263,6 @@ def draw(card, angle, coordinate):
 
 def draw_hidden(card, angle, coordinate):
     return pygame.transform.rotozoom(card.hidden, angle, 0.27), coordinate
-
-# def game():
-#     # name = input("Enter ur name ")
-#     player = Player("name")
-#
-#     crup = Croupier()
-#     shoe = crup.make_a_shoe()
-#     game_loop = True
-#
-#     while game_loop:
-#         if player.sum_score() < 21:
-#             a = input("PRESS A TO TAKE A CARD")
-#             if a == 'a'.lower():
-#                 player.take_card(shoe)
-#                 crup.take_card(shoe)
-#                 print('Crup took a card')
-#                 print(f"ur cards  {player.hand} (sum = {player.sum_score()})")
-#                 print(f'{crup.hand} is CRUP   (sum = {crup.sum_score()})')
-#                 a2 = input("Wanna more? press a to take more or press any key if its enough")
-#                 if a2 == "a":
-#                     continue
-#                 else:
-#                     if 21 >= player.sum_score() > crup.sum_score():
-#                         print(f"you WIN Ur score is {player.sum_score()} , crup {crup.sum_score}")
-#                         break
-#                     else:
-#                         print(f'LOOSEER Ur score is {player.sum_score()} , crup {crup.sum_score}')
-#                         break
-#         else:
-#             print('LOST SCORE is > 21')
-#             break
-#
 
 
 if __name__ == "__main__":
