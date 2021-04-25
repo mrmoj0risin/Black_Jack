@@ -4,6 +4,9 @@ import sys
 import os
 from UIElement import UIElement, GameState, Button
 from players import Player, Croupier
+import tkinter as tk
+from tkinter import ttk
+from tkinter.messagebox import showinfo
 
 pygame.init()
 fps = 5
@@ -177,8 +180,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
                 if btn_take_card.isOver(pos) and game_stop:
 
                     if 6 > player.count:
-                        print(not bool(btn_stop.pressed))
-                        print('Game ', game_stop)
+
                         player.take_card(shoe)
                         crup.take_card(shoe)
 
@@ -196,7 +198,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
 
                         print('Player', player.score)
                         print('Crup', crup.score)
-                print('"player count is"', player.count)
+
                 # BTN STOP
                 if btn_stop.isOver(pos):
                     btn_stop.pressed = True
@@ -205,6 +207,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
                     crup_hand_draw.clear()
 
                     if 21 >= player.score > crup.score:
+                        print('Crup', crup.score, 'Player', player.score)
                         print('Player', player.hand)
                         print("WIN")
                         print('Crup', crup.hand)
@@ -212,6 +215,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
                         print('Player', player.hand)
                         print("WIN")
                         print('Crup', crup.hand)
+
                     elif player.score == crup.score:
                         print('Draw')
                     else:
