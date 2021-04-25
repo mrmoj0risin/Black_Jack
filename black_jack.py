@@ -49,6 +49,9 @@ crup_coordinates = [(250, 100), (290, 115), (340, 125), (390, 125), (420, 124), 
 
 
 crup_hand_draw = []
+crup_hand_open = []
+
+
 
 
 def main():
@@ -163,10 +166,12 @@ def play_level(screen, game_state, player, shoe, crup):
 
 
 def game_loop(screen, buttons, game_state, player, shoe, crup):
+    game_stop = True
     while True:
         clock = pygame.time.Clock()
         clock.tick(30)
         mouse_up = False
+
 
         btn_take_card = Button(
             color=BG_RGB2,
@@ -197,36 +202,52 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 # BTN    TAKE CARD
-                if btn_take_card.isOver(pos):
-                    player.take_card(shoe)
-                    crup.take_card(shoe)
+                if btn_take_card.isOver(pos) and game_stop:
 
-                    player_card = draw(player.hand[player.count], angles[player.count], coordinates[player.count])
+                    if 6 > player.count:
+                        print(not bool(btn_stop.pressed))
+                        print('Game ', game_stop)
+                        player.take_card(shoe)
+                        crup.take_card(shoe)
 
-                    crup_card = draw_hidden(crup.hand[crup.count], crup_angles[crup.count],
-                                            crup_coordinates[crup.count])
+                        player_card = draw(player.hand[player.count], angles[player.count], coordinates[player.count])
 
-                    player_hand_draw.append(player_card)
-                    crup_hand_draw.append(crup_card)
+                        crup_card = draw_hidden(crup.hand[crup.count], crup_angles[crup.count],
+                                                crup_coordinates[crup.count])
+
+                        crup_card2 = draw(crup.hand[crup.count], crup_angles[crup.count],
+                                                crup_coordinates[crup.count])
+
+                        player_hand_draw.append(player_card)
+                        crup_hand_draw.append(crup_card)
+                        crup_hand_open.append(crup_card2)
+
+                        print('Player', player.score)
+                        print('Crup', crup.score)
+                print('"player count is"', player.count)
                 # BTN STOP
                 if btn_stop.isOver(pos):
                     btn_stop.pressed = True
+                    game_stop = False
 
-                    if btn_stop.pressed:
-                        crup_hand_draw.clear()
+                    # if btn_stop.pressed:
 
-                    if player.sum_score() > crup.sum_score():
-                        print(player.score)
-                        print(player.hand)
+                    crup_hand_draw.clear()
+
+                    if 21 > player.score > crup.score or crup.score > 21:
+                        print('Player', player.score)
+                        print('Player', player.hand)
                         print("WIN")
-                        print(crup.score)
-                        print(crup.hand)
+                        print('Crup', crup.score)
+                        print('Crup', crup.hand)
+                    elif player.score == crup.score:
+                        print('Draw')
                     else:
-                        print(player.score)
-                        print(player.hand)
-                        print("LOSER")
-                        print(crup.score)
-                        print(crup.hand)
+                        print('Player', player.score)
+                        print('Player', player.hand)
+                        print("LOST")
+                        print('Crup', crup.score)
+                        print('Crup', crup.hand)
                 mouse_up = True
         if game_state == GameState.GAME:
 
@@ -234,8 +255,6 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
             screen.blit(BG_IMG, (0, screen.get_height() / 2 - BG_IMG.get_height() / 2))
             btn_take_card.draw(screen, True)
             btn_stop.draw(screen, True)
-
-            # if 7 > player.count >= 0:
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
@@ -248,11 +267,12 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
         for card in player_hand_draw:
             screen.blit(card[0], card[1])
 
+        for card in crup_hand_open:
+            screen.blit(card[0], card[1])
+
         for card in crup_hand_draw:
             screen.blit(card[0], card[1])
 
-
-        print(crup_hand_draw)
         pygame.display.flip()
         pygame.display.update()
 

@@ -25,6 +25,7 @@ class Player:
     def take_card(self, shoe):
         self.hand.append(shoe.pop(0))
         self.count += 1
+        self.sum_score()
         return self.count
 
     def clear(self):
