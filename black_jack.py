@@ -45,13 +45,11 @@ coordinates = [(24, 312), (130, 390), (255, 442), (400, 468), (520, 440), (630, 
 # crup_hand7 = Hand(13, (490, 100))
 
 crup_angles = [-13, -8, -3, 0, 3, 8, 13]
-crup_coordinates = [(250, 100), (290, 115), (340, 125), (390, 125), (420, 124), (450, 114), (490, 100)]
+crup_coordinates = [(245, 100), (290, 115), (340, 125), (390, 125), (420, 124), (450, 110), (490, 95)]
 
 
 crup_hand_draw = []
 crup_hand_open = []
-
-
 
 
 def main():
@@ -234,20 +232,21 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
 
                     crup_hand_draw.clear()
 
-                    if 21 >= player.score > crup.score or crup.score > 21:
-                        print('Player', player.score)
+                    if 21 >= player.score > crup.score:
                         print('Player', player.hand)
                         print("WIN")
-                        print('Crup', crup.score)
+                        print('Crup', crup.hand)
+                    elif crup.score > 21 >= player.score:
+                        print('Player', player.hand)
+                        print("WIN")
                         print('Crup', crup.hand)
                     elif player.score == crup.score:
                         print('Draw')
                     else:
-                        print('Player', player.score)
-                        print('Player', player.hand)
+                        print('Crup', crup.score, 'Player', player.score)
+                        print('Player Hand', player.hand)
                         print("LOST")
-                        print('Crup', crup.score)
-                        print('Crup', crup.hand)
+                        print('Crup Hand', crup.hand)
                 mouse_up = True
         if game_state == GameState.GAME:
 
@@ -255,23 +254,22 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
             screen.blit(BG_IMG, (0, screen.get_height() / 2 - BG_IMG.get_height() / 2))
             btn_take_card.draw(screen, True)
             btn_stop.draw(screen, True)
+            buttons.draw(screen)
+
+            # draw cards
+            for card in player_hand_draw:
+                screen.blit(card[0], card[1])
+
+            for card in crup_hand_open:
+                screen.blit(card[0], card[1])
+
+            for card in crup_hand_draw:
+                screen.blit(card[0], card[1])
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
             if ui_action is not None:
                 return ui_action
-
-        buttons.draw(screen)
-
-        # draw cards
-        for card in player_hand_draw:
-            screen.blit(card[0], card[1])
-
-        for card in crup_hand_open:
-            screen.blit(card[0], card[1])
-
-        for card in crup_hand_draw:
-            screen.blit(card[0], card[1])
 
         pygame.display.flip()
         pygame.display.update()
@@ -289,7 +287,7 @@ def draw(card, angle, coordinate):
 
 
 def draw_hidden(card, angle, coordinate):
-    return pygame.transform.rotozoom(card.hidden, angle, 0.26), coordinate
+    return pygame.transform.rotozoom(card.hidden, angle, 0.27), coordinate
 
 # def game():
 #     # name = input("Enter ur name ")
