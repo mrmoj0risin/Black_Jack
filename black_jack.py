@@ -27,7 +27,6 @@ coordinates = [(24, 312), (130, 390), (255, 442), (400, 468), (520, 440), (630, 
 crup_angles = [-13, -8, -3, 0, 3, 8, 13]
 crup_coordinates = [(245, 100), (290, 115), (340, 125), (390, 125), (420, 124), (450, 110), (490, 95)]
 
-
 crup_hand_draw = []
 crup_hand_open = []
 
@@ -115,9 +114,8 @@ def screens_loop(screen, buttons, game_state, player):
 
 
 def play_level(screen, game_state, player, shoe, crup):
-
     return_btn = UIElement(
-        center_position=(width - 80, screen.get_height()-30),
+        center_position=(width - 80, screen.get_height() - 30),
         font_size=17,
         bg_rgb=BG_RGB,
         text_rgb=WHITE,
@@ -126,7 +124,7 @@ def play_level(screen, game_state, player, shoe, crup):
     )
     take_card = UIElement(
 
-        center_position=(width/2-200, height-100),
+        center_position=(width / 2 - 200, height - 100),
         font_size=25,
         bg_rgb=BG_RGB,
         text_rgb=WHITE,
@@ -147,10 +145,9 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
         clock.tick(30)
         mouse_up = False
 
-
         btn_take_card = Button(
             color=BG_RGB2,
-            x=width/2-300,
+            x=width / 2 - 300,
             y=screen.get_height() - 130,
             width=200,
             height=60,
@@ -159,7 +156,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
 
         btn_stop = Button(
             color=BG_RGB2,
-            x=width/2+96,
+            x=width / 2 + 96,
             y=screen.get_height() - 130,
             width=200,
             height=60,
@@ -191,7 +188,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
                                                 crup_coordinates[crup.count])
 
                         crup_card2 = draw(crup.hand[crup.count], crup_angles[crup.count],
-                                                crup_coordinates[crup.count])
+                                          crup_coordinates[crup.count])
 
                         player_hand_draw.append(player_card)
                         crup_hand_draw.append(crup_card)
