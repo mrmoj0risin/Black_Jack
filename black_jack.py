@@ -234,7 +234,7 @@ def game_loop(screen, buttons, game_state, player, shoe, crup):
 
                     crup_hand_draw.clear()
 
-                    if 21 > player.score > crup.score or crup.score > 21:
+                    if 21 >= player.score > crup.score or crup.score > 21:
                         print('Player', player.score)
                         print('Player', player.hand)
                         print("WIN")
